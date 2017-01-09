@@ -56,10 +56,10 @@
 
   function computerMovement() {
     var paddle2YCenter = paddle2Y + (paddleHeight/2);
-    if(paddle2YCenter < ballY-35) {
-      paddle2Y += 6;
-    } else if(paddle2YCenter < ballY+35) {
-      paddle2Y -= 6
+    if(paddle2YCenter < ballY-40) {
+      paddle2Y += 4;
+    } else if(paddle2YCenter < ballY+40) {
+      paddle2Y -= 4;
     }
   }
 
@@ -105,7 +105,8 @@
     colorRect(canvas.width - paddleWidth, paddle2Y, paddleWidth, paddleHeight, 'white');
     //this draws ball
     colorCircle(ballX, ballY, 7, 'white');
-    canvasContext.fillText("Score", canvas.width/2, 100)
+    canvasContext.fillText(player1Score, 100, 100)
+    canvasContext.fillText(player2Score, canvas.width - 100, 100)
   }
 
   function colorCircle(centerX, centerY, radius, drawColor) {
