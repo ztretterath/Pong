@@ -19,8 +19,10 @@
   var paddle2Y = 250;
   const paddleHeight = 100;
   const paddleWidth = 10;
-  const winningScore = 5;
+  const winningScore = 3;
 
+  //scoring
+  var showWinScreen = false;
   var player1Score = 0;
   var player2Score = 0;
 
@@ -35,6 +37,14 @@
     };
   }
 
+  function handleMouseClick() {
+    if (showWinScreen){
+      player1Score = 0;
+      player2Score = 0;
+      showWinScreen = false;
+    }
+  }
+
   window.onload = function() {
     canvas = document.getElementById('gameCanvas');
     canvasContext = canvas.getContext('2d');
@@ -43,6 +53,9 @@
       moveEverything();
       drawEverything();
     }, 1000/framesPerSecond);
+
+    canvas.addEventListener('mousedown', handleMouseClick)
+
     canvas.addEventListener('mousemove', function(evt){
       var mousePos = calculateMousPosition(evt);
       paddle1Y = mousePos.y - (paddleHeight/2)
@@ -51,8 +64,7 @@
 
   function ballReset(){
     if(player1Score >= winningScore || player2Score >= winningScore) {
-      player1Score = 0;
-      player2Score = 0;
+      showWinScreen = true;
     }
     ballX = canvas.width/2;
     ballY = canvas.height/2;
@@ -63,12 +75,16 @@
     var paddle2YCenter = paddle2Y + (paddleHeight/2);
     if(paddle2YCenter < ballY-35) {
       paddle2Y += 6;
-    } else if(paddle2YCenter < ballY+35) {
+    } else if(paddle2YCenter > ballY+35) {
       paddle2Y -= 6;
     }
   }
 
   function moveEverything() {
+    if (showWinScreen) {
+      return;
+    }
+
     computerMovement();
 
     ballX += ballSpeedX;
@@ -105,9 +121,39 @@
     }
   }
 
+  function drawNet() {
+    for (var i = 0; i < canvas.height; i+=40){
+      colorRect(canvas.width/2-1, i, 2, 20, 'white');
+    }
+  };
+
   function drawEverything() {
     //next line covers canvas in black
     colorRect(0, 0, canvas.width, canvas.height, 'black')
+
+    // if (showWinScreen && player1Score >= winningScore){
+    //   canvasContext.fillStyle = 'white';
+    //   canvasContext.fillText("You win!", 350, 200);
+    // } else if (showWinScreen && player2Score >= winningScore){
+    //   canvasContext.fillStyle = 'white';
+    //   canvasContext.fillText("You were defeated by a machine", 350, 200);
+    // }
+
+    if (showWinScreen) {
+      canvasContext.fillStyle = 'white';
+      if(player1Score >= winningScore) {
+        canvasContext.fillStyle = 'white';
+        canvasContext.fillText('you win!', 350, 200);
+      } else if(player2Score >= winningScore) {
+        canvasContext.fillStyle = 'white';
+        canvasContext.fillText('you were defeated by a machine', 340, 200);
+      }
+      canvasContext.fillText('click to continue', 350, 500)
+      return;
+    }
+
+    drawNet();
+
     //this is left player paddle
     colorRect(0, paddle1Y, paddleWidth, paddleHeight, 'white');
     //this is right player paddle
