@@ -21,21 +21,29 @@
 
   function moveEverything() {
     ballX += ballSpeedX;
-    if (ballX > canvas.width) {
+    if (ballX < 0) {
+      ballSpeedX = -ballSpeedX;
+    }
+    if (ballX > canvas.width - 10) {
       ballSpeedX = -ballSpeedX;
     }
 
   }
 
   function drawEverything() {
-    canvasContext.fillStyle = 'black';
-    canvasContext.fillRect(0, 0, canvas.width, canvas.height);
-    canvasContext.fillStyle = 'red';
-    canvasContext.fillRect(ballX, 100, 10, 10);
-    canvasContext.fillStyle = 'white';
-    canvasContext.fillRect(10, 210, 10, 100);
-    canvasContext.fillStyle = 'white';
-    canvasContext.fillRect(780, 210, 10, 100);
+    //next line covers canvas in black
+    colorRect(0, 0, canvas.width, canvas.height, 'black')
+    //this is left player paddle
+    colorRect(10, 210, 10, 100, 'white');
+    //this is right player paddle
+    colorRect(780, 210, 10, 100, 'white');
+    //this draws ball
+    colorRect(ballX, 100, 10, 10, 'red')
+  }
+
+  function colorRect(leftX, topY, width, height, drawColor) {
+    canvasContext.fillStyle = drawColor;
+    canvasContext.fillRect(leftX, topY, width, height);
   }
 
 </script>
